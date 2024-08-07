@@ -8,7 +8,7 @@
             "name": "Frank End: train.py",
             "type": "python",
             "request": "launch",
-            "program": "C:\\Users\\frank\\OneDrive\\Documents\\Coding-Projects\\blocktanks-rl\\train.py",
+            "program": "/home/willow/Documents/blocktanks-rl-2/runModel.py",
             "console": "integratedTerminal",
             "justMyCode": true
         },
@@ -16,7 +16,7 @@
             "name": "Frank End: runModel.py",
             "type": "python",
             "request": "launch",
-            "program": "C:\\Users\\frank\\OneDrive\\Documents\\Coding-Projects\\blocktanks-rl\\runModel.py",
+            "program": "/home/willow/Documents/blocktanks-rl-2/train.py",
             "console": "integratedTerminal",
             "justMyCode": true
         },
