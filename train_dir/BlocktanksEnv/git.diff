@@ -1,0 +1,159 @@
+diff --git a/SimpleEnv/__pycache__/BlocktanksGame.cpython-310.pyc b/SimpleEnv/__pycache__/BlocktanksGame.cpython-310.pyc
+index 9c47b1f..d3eb02b 100644
+Binary files a/SimpleEnv/__pycache__/BlocktanksGame.cpython-310.pyc and b/SimpleEnv/__pycache__/BlocktanksGame.cpython-310.pyc differ
+diff --git a/SimpleEnv/__pycache__/Bullet.cpython-310.pyc b/SimpleEnv/__pycache__/Bullet.cpython-310.pyc
+index 674c6fb..6a9849b 100644
+Binary files a/SimpleEnv/__pycache__/Bullet.cpython-310.pyc and b/SimpleEnv/__pycache__/Bullet.cpython-310.pyc differ
+diff --git a/SimpleEnv/__pycache__/Map.cpython-310.pyc b/SimpleEnv/__pycache__/Map.cpython-310.pyc
+index 6dd14c3..99afabf 100644
+Binary files a/SimpleEnv/__pycache__/Map.cpython-310.pyc and b/SimpleEnv/__pycache__/Map.cpython-310.pyc differ
+diff --git a/SimpleEnv/__pycache__/Player.cpython-310.pyc b/SimpleEnv/__pycache__/Player.cpython-310.pyc
+index b0bed08..2427811 100644
+Binary files a/SimpleEnv/__pycache__/Player.cpython-310.pyc and b/SimpleEnv/__pycache__/Player.cpython-310.pyc differ
+diff --git a/SimpleEnv/__pycache__/Target.cpython-310.pyc b/SimpleEnv/__pycache__/Target.cpython-310.pyc
+index f94cca8..7d2b076 100644
+Binary files a/SimpleEnv/__pycache__/Target.cpython-310.pyc and b/SimpleEnv/__pycache__/Target.cpython-310.pyc differ
+diff --git a/SimpleEnv/__pycache__/Utils.cpython-310.pyc b/SimpleEnv/__pycache__/Utils.cpython-310.pyc
+index c4f00fc..92575a8 100644
+Binary files a/SimpleEnv/__pycache__/Utils.cpython-310.pyc and b/SimpleEnv/__pycache__/Utils.cpython-310.pyc differ
+diff --git a/SimpleEnv/__pycache__/WeaponDrop.cpython-310.pyc b/SimpleEnv/__pycache__/WeaponDrop.cpython-310.pyc
+index 3a35e03..a995a55 100644
+Binary files a/SimpleEnv/__pycache__/WeaponDrop.cpython-310.pyc and b/SimpleEnv/__pycache__/WeaponDrop.cpython-310.pyc differ
+diff --git a/SimpleEnv/__pycache__/constants.cpython-310.pyc b/SimpleEnv/__pycache__/constants.cpython-310.pyc
+index 864f1cb..777f216 100644
+Binary files a/SimpleEnv/__pycache__/constants.cpython-310.pyc and b/SimpleEnv/__pycache__/constants.cpython-310.pyc differ
+diff --git a/__pycache__/BlocktanksEnv.cpython-310.pyc b/__pycache__/BlocktanksEnv.cpython-310.pyc
+index e77c47e..4f181f2 100644
+Binary files a/__pycache__/BlocktanksEnv.cpython-310.pyc and b/__pycache__/BlocktanksEnv.cpython-310.pyc differ
+diff --git a/enjoy_BlocktanksEnv.py b/enjoy_BlocktanksEnv.py
+deleted file mode 100644
+index ec7f5aa..0000000
+--- a/enjoy_BlocktanksEnv.py
++++ /dev/null
+@@ -1,16 +0,0 @@
+-import sys
+-
+-from sample_factory.enjoy import enjoy
+-from sf_examples.train_custom_env_custom_model import parse_custom_args, register_custom_components
+-
+-
+-def main():
+-    """Script entry point."""
+-    register_custom_components()
+-    cfg = parse_custom_args(evaluation=True)
+-    status = enjoy(cfg)
+-    return status
+-
+-
+-if __name__ == "__main__":
+-    sys.exit(main())
+\ No newline at end of file
+diff --git a/runModel.py b/runModel.py
+index 5d9cece..fc05455 100644
+--- a/runModel.py
++++ b/runModel.py
+@@ -1,26 +1,19 @@
+ import os
+ import math
+ 
+-from stable_baselines3 import PPO
+-
+-from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack
+ from gymnasium.spaces import MultiDiscrete, Box
+ from keyboard import is_pressed
+ from pygame import mouse
+ 
+ from BlocktanksEnv import BlocktanksEnv, BlocktanksGame
+ 
+-manual = true
++manual = True
+ 
+ env = BlocktanksEnv(render=True)
+ 
+ if not manual:
+     model_path = os.path.abspath(os.path.join("Training", "SavedModels", "rl_model_180000_steps")) #"final"))
+-    #model_path = os.path.abspath(os.path.join("Models", "PPO1"))
+ 
+-    #env = DummyVecEnv([ lambda: env ])
+-    #env = VecFrameStack(env, 4, channels_order='last')
+-    model = PPO.load(model_path)
+ 
+ episodes = 5
+ 
+diff --git a/test.py b/test.py
+deleted file mode 100644
+index 045c96c..0000000
+--- a/test.py
++++ /dev/null
+@@ -1,6 +0,0 @@
+-import os
+-
+-from stable_baselines3 import PPO
+-
+-model_path = os.path.abspath(os.path.join("Training", "SavedModels", "A"))
+-model = PPO.load(model_path)
+diff --git a/train.py b/train.py
+deleted file mode 100644
+index 5e5886c..0000000
+--- a/train.py
++++ /dev/null
+@@ -1,58 +0,0 @@
+-import os
+-
+-from stable_baselines3 import PPO
+-
+-from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecNormalize
+-from stable_baselines3.common.evaluation import evaluate_policy
+-from stable_baselines3.common.callbacks import CheckpointCallback
+-
+-from stable_baselines3.common.monitor import Monitor
+-
+-from BlocktanksEnv import BlocktanksEnv
+-
+-import math
+-
+-from constants import HyperParameters as Hp, LearningParameters as Lp
+-
+-log_path = os.path.join("Training", "Logs")
+-model_path = os.path.join("Training", "SavedModels", "final")
+-
+-def create_env(seed):
+-    def init():
+-        env = Monitor(BlocktanksEnv(seed=seed))
+-        return env
+-
+-    return init
+-
+-if __name__ == "__main__":
+-    #env = BlocktanksEnv()
+-    env = SubprocVecEnv([ create_env(seed) for seed in range(Lp.N_ENVS) ])
+-    env = VecNormalize(env, norm_obs=False, norm_reward=True)
+-
+-    checkpoint_callback = CheckpointCallback(
+-        save_freq=Lp.SAVE_FREQ,
+-        save_path="./Training/SavedModels/",
+-        name_prefix="rl_model",
+-        save_replay_buffer=True,
+-        save_vecnormalize=True,
+-    )
+-
+-    model = PPO(
+-        "CnnPolicy", 
+-        env, 
+-        verbose=1, 
+-        tensorboard_log=log_path, 
+-        learning_rate=Hp.LEARNING_RATE,
+-        n_steps=Hp.N_STEPS,
+-        batch_size=Hp.BATCH_SIZE,
+-        gamma=Hp.GAMMA
+-    )
+-
+-    model.learn(
+-        log_interval=Lp.LOG_INTERVAL_STEPS // (Lp.N_ENVS * Hp.N_STEPS),
+-        total_timesteps=Lp.TOTAL_TIMESTEPS,
+-        callback=checkpoint_callback
+-    )
+-
+-
+-    model.save(model_path)
+\ No newline at end of file

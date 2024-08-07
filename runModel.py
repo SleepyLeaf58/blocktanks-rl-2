@@ -1,26 +1,19 @@
 import os
 import math
 
-from stable_baselines3 import PPO
-
-from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack
 from gymnasium.spaces import MultiDiscrete, Box
 from keyboard import is_pressed
 from pygame import mouse
 
 from BlocktanksEnv import BlocktanksEnv, BlocktanksGame
 
-manual = true
+manual = True
 
 env = BlocktanksEnv(render=True)
 
 if not manual:
     model_path = os.path.abspath(os.path.join("Training", "SavedModels", "rl_model_180000_steps")) #"final"))
-    #model_path = os.path.abspath(os.path.join("Models", "PPO1"))
 
-    #env = DummyVecEnv([ lambda: env ])
-    #env = VecFrameStack(env, 4, channels_order='last')
-    model = PPO.load(model_path)
 
 episodes = 5
 
