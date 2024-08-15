@@ -34,8 +34,8 @@ class BlocktanksGame:
     def __init__(self, **kwargs): 
         self.doRender = kwargs.get("render", False)
 
-        self._seed = kwargs.get("seed", random.random())
-        random.seed(self._seed)
+        #self._seed = kwargs.get("seed", random.random())
+        #random.seed(self._seed)
 
         pygame.display.set_caption("Game View")
 

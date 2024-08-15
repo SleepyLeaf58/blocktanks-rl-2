@@ -14,7 +14,7 @@ from sample_factory.utils.typing import Config, ObsSpace
 from torch import nn
 
 from gymnasium import Env
-from gymnasium.spaces import MultiDiscrete, Discrete, Box
+from gymnasium.spaces import MultiDiscrete, Discrete, Box, Tuple
 import gymnasium as gym
 import numpy as np
 import math, random
@@ -36,7 +36,7 @@ class BlocktanksEnv(Env):
     WEAPON_PICKUP_REWARD = 0.5
 
     DEATH_PENALTY = -2
-    SHOOTING_PENALTY = -0.02
+    SHOOTING_PENALTY = 0#-0.02
 
     #MAX_SHOOTING_SHAPED_REWARD = 1000
     #MAX_DODGING_SHAPED_REWARD = 0#350
@@ -51,8 +51,15 @@ class BlocktanksEnv(Env):
         BlocktanksEnv.instances += 1
         print(BlocktanksEnv.instances)
 
-        self.action_space = MultiDiscrete([3, 3, 2, BlocktanksEnv.ANGLES]) # x-move, y-move, shoot (TODO: add powerups to this), angle
-        self.observation_space = Box(0, 255, (165, 316, 4), np.uint8)
+        #self.action_space = MultiDiscrete([3, 3, 2, BlocktanksEnv.ANGLES]) # x-move, y-move, shoot (TODO: add powerups to this), angle
+        self.action_space = Tuple((
+            Discrete(3), # x-move
+            Discrete(3), # y-move
+            Discrete(2), # Shooting On Off (TODO: add powerups to this)
+            Discrete(BlocktanksEnv.ANGLES)
+        )) 
+
+        self.observation_space = Box(0, 255, (4, 165, 316), np.uint8)
 
         #self.n_steps = kwargs.get("n_steps", None)
 
@@ -91,7 +98,10 @@ class BlocktanksEnv(Env):
         curObs = self.get_obs()
 
         if self.render:
-            cv2.imshow("AI View", curObs)
+            pass
+            # convert to channel first
+            #renderedObs = np.moveaxis(curObs, -1, 0)
+            #cv2.imshow("Model View", renderedObs)
             #cv2.imwrite("obs.png", curObs)
 
         # Reward Handling
@@ -163,6 +173,10 @@ class BlocktanksEnv(Env):
 
         img_data = np.asarray(adjustedFrames, dtype=np.uint8).swapaxes(0,2)#.swapaxes(0,1)
         #img_data = np.asarray(self.obs_frames, dtype=np.uint8).swapaxes(0,2)#.swapaxes(0,1)
+
+        # convert to channel first
+        img_data = np.moveaxis(img_data, -1, 0)
+        #print(img_data.shape)
        
         return img_data
 
